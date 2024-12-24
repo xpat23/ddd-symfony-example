@@ -1,0 +1,14 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Client\Infrastructure\Controller\:
+    resource: '../Controller/'
+    tags: [ 'controller.service_arguments' ]
+
+  Client\Application\Service\:
+    resource: '../../Application/Service/'
+
+  Client\Domain\Repository\ClientRepository:
+    class: Client\Infrastructure\Repository\DoctrineClientRepository

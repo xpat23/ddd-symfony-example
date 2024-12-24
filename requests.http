@@ -1,0 +1,54 @@
+### Create client
+POST http://localhost:8094/client
+Accept: application/json
+Content-Type: application/json
+
+{
+  "firstName": "Jane",
+  "lastName": "Parker",
+  "age": 30,
+  "ssn": "123-45-6789",
+  "address": {
+    "address": "123 Main St",
+    "city": "Springfield",
+    "state": "IL",
+    "zip": "62701"
+  },
+  "rating": 400,
+  "monthlyIncome": 5000,
+  "email": "test@mail.com",
+  "phone": "123-456-7890"
+}
+
+
+### Update client /client/{clientId}
+
+PUT http://localhost:8094/client/1
+Accept: application/json
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "age": 27,
+  "ssn": "123-45-6788",
+  "address": {
+    "address": "123 Main St",
+    "city": "Springfield",
+    "state": "CA",
+    "zip": "62701"
+  },
+  "rating": 400,
+  "monthlyIncome": 5000,
+  "email": "test1@mail.com",
+  "phone": "123-456-7891"
+}
+
+### Check product availability for the client /product/{productId}/availability/{clientId}
+
+GET http://localhost:8094/product/2/availability/1
+
+### Issue product to the client /product/{productId}/issue/{clientId}
+
+POST http://localhost:8094/product/2/issue/1
+Accept: application/json

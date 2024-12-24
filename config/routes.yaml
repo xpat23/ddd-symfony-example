@@ -1,0 +1,17 @@
+controllers:
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
+
+client_controllers:
+  resource:
+    path: ../module/Client/Infrastructure/Controller/
+    namespace: Client\Infrastructure\Controller
+  type: attribute
+
+product_controllers:
+  resource:
+    path: ../module/Product/Infrastructure/Controller/
+    namespace: Product\Infrastructure\Controller
+  type: attribute

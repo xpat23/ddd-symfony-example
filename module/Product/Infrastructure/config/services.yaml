@@ -1,0 +1,63 @@
+parameters:
+  product_available_minimum_rating: '%env(int:PRODUCT_AVAILABLE_MINIMUM_RATING)%'
+  product_available_minimum_monthly_income: '%env(float:PRODUCT_AVAILABLE_MINIMUM_MONTHLY_INCOME)%'
+  product_available_minimum_age: '%env(int:PRODUCT_AVAILABLE_MINIMUM_AGE)%'
+  product_available_maximum_age: '%env(int:PRODUCT_AVAILABLE_MAXIMUM_AGE)%'
+  product_available_states: '%env(json:PRODUCT_AVAILABLE_STATES)%'
+  product_available_random_states: '%env(json:PRODUCT_AVAILABLE_RANDOM_STATES)%'
+  product_rate_increased_states: '%env(json:PRODUCT_RATE_INCREASED_STATES)%'
+
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Product\Infrastructure\Controller\:
+    resource: '../Controller/'
+    tags: [ 'controller.service_arguments' ]
+
+  Product\Application\Service\:
+    resource: '../../Application/Service/'
+
+  Product\Infrastructure\Repository\:
+    resource: '../Repository/'
+
+  Product\Infrastructure\Event\:
+    resource: '../Event/'
+
+  Product\Domain\Service\RandomizerService:
+    class: Product\Domain\Service\RandomizerService
+
+  Product\Domain\Repository\ProductRepository:
+    class: Product\Infrastructure\Repository\StubProductRepository
+
+  Product\Domain\Repository\ClientRepository:
+    class: Product\Infrastructure\Repository\ProxyClientRepository
+
+  Product\Domain\Event\EventBus: '@Product\Infrastructure\Event\SymfonyMessageBus'
+
+  Product\Domain\Service\ProductAvailabilityChecking\ProductAvailabilityCheckingService: '@Product\Domain\Service\ProductAvailabilityChecking\RatingBasedCheckingService'
+
+  Product\Domain\Service\ProductAvailabilityChecking\RatingBasedCheckingService:
+    stack:
+      - class: Product\Domain\Service\ProductAvailabilityChecking\IncreasedRateForStatesService
+        arguments: [ '@.inner', '%product_rate_increased_states%' ]
+      - class: Product\Domain\Service\ProductAvailabilityChecking\RandomAvailabilityForStatesService
+        arguments: [
+          '@.inner',
+          '@Product\Domain\Service\RandomizerService',
+          '%product_available_random_states%'
+        ]
+      - class: Product\Domain\Service\ProductAvailabilityChecking\StateBasedCheckingService
+        arguments: [ '@.inner', '%product_available_states%' ]
+      - class: Product\Domain\Service\ProductAvailabilityChecking\AgeBasedCheckingService
+        arguments: [
+          '@.inner',
+          '%product_available_minimum_age%',
+          '%product_available_maximum_age%'
+        ]
+      - class: Product\Domain\Service\ProductAvailabilityChecking\MonthlyIncomeBasedCheckingService
+        arguments: [ '@.inner', '%product_available_minimum_monthly_income%' ]
+      - class: Product\Domain\Service\ProductAvailabilityChecking\RatingBasedCheckingService
+        arguments: [ '%product_available_minimum_rating%' ]

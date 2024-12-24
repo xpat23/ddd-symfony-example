@@ -1,0 +1,46 @@
+Client\Application\Dto\CreateClientDto:
+  constraints:
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+        fields: [ ssn ]
+        entityClass: 'Client\Domain\Entity\Client'
+        message: 'This SSN is already in use.'
+
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+        fields: { email: contact.email }
+        entityClass: 'Client\Domain\Entity\Client'
+        message: 'This email is already in use.'
+
+    - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+        fields: { phone: contact.phone }
+        entityClass: 'Client\Domain\Entity\Client'
+        message: 'This phone number is already in use.'
+
+  properties:
+    firstName:
+      - NotBlank: ~
+      - Length:
+          min: 3
+          max: 50
+    lastName:
+      - NotBlank: ~
+      - Length:
+          min: 3
+          max: 50
+    email:
+      - NotBlank: ~
+      - Email: ~
+    phone:
+      - NotBlank: ~
+      - Regex:
+          pattern: '/^\d{3}-\d{3}-\d{4}$/'
+          message: 'Phone number format should be in the format XXX-XXX-XXXX. Example: 123-456-7890'
+    age:
+      - NotBlank: ~
+      - Type: integer
+    ssn:
+      - NotBlank: ~
+      - Regex:
+          pattern: '/^\d{3}-\d{2}-\d{4}$/'
+          message: 'SSN format should be in the format XXX-XX-XXXX. Example: 123-45-6789'
+
+# We can validate other fields like this
