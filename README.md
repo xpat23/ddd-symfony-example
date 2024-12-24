@@ -1,4 +1,4 @@
-# DDD and Clean Architecture Example on Symfony
+# DDD and Clean Architecture example on Symfony
 
 ## Description
 
